@@ -4,8 +4,7 @@
     "lib": [
       "ES2015"
     ],
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "outDir": "./dist"
   },
   "exclude": [
     "node_modules"
