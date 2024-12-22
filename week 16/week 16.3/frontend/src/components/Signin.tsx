@@ -14,6 +14,7 @@ const Signin = () => {
                     username,
                     password
                 }, {
+                    // withCredentials true because this is cross site
                     withCredentials: true,
                 });
                 alert("You are logged in")

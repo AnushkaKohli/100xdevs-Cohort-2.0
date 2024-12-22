@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
+    // credentials true for cross site requests
     credentials: true,
     origin: "http://localhost:5173",
   })
