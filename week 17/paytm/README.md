@@ -1,4 +1,4 @@
-# Start the Project locally
+# Steps to Start the Project locally
 
 - Clone the repo
 
