@@ -2,12 +2,18 @@ import express from "express";
 import db from "@repo/db/client";
 
 const app = express();
+app.use(express.json());
 const PORT = 3003;
 
 app.post("/hdfcWebhook", async (req, res) => {
   // TODO: Add zod validation here?
-  // Check if this request actually came from hdfc bank, use a webhook secret here: HDFC bank should ideally send us a secret so we know this is sent by them
-  const paymentInformation = {
+  // TODO: HDFC bank should ideally send us a secret so we know this request is sent by them
+  // TODO: Check if this onRampTxn is processing or success
+  const paymentInformation: {
+    token: string;
+    userId: string;
+    amount: string;
+  } = {
     token: req.body.token,
     userId: req.body.user_identifier,
     amount: req.body.amount,
@@ -16,9 +22,9 @@ app.post("/hdfcWebhook", async (req, res) => {
   try {
     // A transaction is written so that both the updates HAVE to happen. If the server goes down after the first update then the entire thing will rollback, including refund of money as well as the update in balance table
     await db.$transaction([
-      db.balance.update({
+      db.balance.updateMany({
         where: {
-          userId: paymentInformation.userId,
+          userId: Number(paymentInformation.userId),
         },
         data: {
           amount: {
@@ -26,12 +32,12 @@ app.post("/hdfcWebhook", async (req, res) => {
             // 0 + 200
             // 0 + 400
             // So the user should have 600rs but the user will only have 400rs
-            // by using inrement, the database will handle the increment
-            increment: paymentInformation.amount,
+            // by using increment, the database will handle the increment
+            increment: Number(paymentInformation.amount),
           },
         },
       }),
-      db.onRampTransaction.update({
+      db.onRampTransaction.updateMany({
         where: {
           token: paymentInformation.token,
         },
@@ -53,4 +59,6 @@ app.post("/hdfcWebhook", async (req, res) => {
   }
 });
 
-app.listen(`Listening to app on port ${PORT}`);
+app.listen(3003, () => {
+  console.log(`Listening to app on port ${PORT}`);
+});
