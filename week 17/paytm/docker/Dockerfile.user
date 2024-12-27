@@ -1,0 +1,22 @@
+FROM node:20.12.0-alpine3.19
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json turbo.json tsconfig.json ./
+
+# Earlier we used to run npm i first and then copy everything but since in turborepo, each app may have their own package.json, we are copying it over first and then running npm i
+COPY apps ./apps
+COPY packages ./packages
+
+# Install dependencies
+RUN npm install
+
+# Can you add a script to the global package.json that does this? Yes
+# RUN cd packages/db && npx prisma generate && cd ../..
+RUN npm run db:generate
+
+# Can you filter the build down to just one app? Yes
+# RUN npm run build --filter=user-app
+RUN npm run build
+
+CMD ["npm", "run", "start-user-app"]
