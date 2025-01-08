@@ -1,0 +1,27 @@
+# apps/v1 is the version used for resources like ReplicaSets, Deployments, and StatefulSets.
+apiVersion: apps/v1
+# Specifies the type of Kubernetes resource being defined, which is a ReplicaSet in this case.
+kind: ReplicaSet
+# The name of the ReplicaSet is nginx-myreplicaset
+metadata:
+  name: nginx-myreplicaset
+# Defines the desired state of the ReplicaSet.
+spec:
+  replicas: 3 # Specifies the number of Pods that the ReplicaSet should maintain.
+  # Specifies how the ReplicaSet identifies the Pods it manages.
+  # Ensures that the ReplicaSet selects Pods with the label app: nginx-mylabel
+  selector:
+    matchLabels:
+      app: nginx-mylabel
+  # Defines the Pod template that the ReplicaSet will use to create Pods.
+  template:
+    metadata:
+      labels:
+        app: nginx-mylabel
+    # The Pod specification for the containers it will run.
+    spec:
+      containers:
+        - name: nginx-mycontainer
+          image: nginx:latest
+          ports:
+            - containerPort: 80

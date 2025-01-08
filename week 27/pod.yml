@@ -1,0 +1,15 @@
+#v1 is the API version for core Kubernetes objects like Pods.
+apiVersion: v1 
+# Indicates the type of Kubernetes resource to create.
+kind: Pod
+metadata:
+	# Sets the name of the Pod as nginx.
+  name: nginx
+# Defines the desired state of the Pod.
+spec:
+  containers:
+  # The name of the container inside the Pod.
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
