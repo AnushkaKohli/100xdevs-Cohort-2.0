@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecom-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecom-backend
+  template:
+    metadata:
+      labels:
+        app: ecom-backend
+    spec:
+      containers:
+        - name: ecom-backend
+          image: 100xdevs/env-backend
+          ports:
+            - containerPort: 3000
+          # Uses (mounts) the volume you just created and brings it to /etc/secret-volume folder
+          volumeMounts:
+            - name: env-file
+              readOnly: true
+              mountPath: "/etc/secret-volume"
+      # Creates the volume
+      volumes:
+        - name: env-file
+          secret:
+            secretName: dotfile-secret
