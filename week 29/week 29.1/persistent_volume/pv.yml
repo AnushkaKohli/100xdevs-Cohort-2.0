@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  # changes if you're storing it to an elastic block store (EBS), or vultr block store or in your own NFS, etc
+  storageClassName: nfs
+  nfs:
+    # This is the path on the final machine where your persistent volume is actually created i.e. where the data will actually persist if the pod is deleted
+    path: /exports
+    server: 52.66.197.168
